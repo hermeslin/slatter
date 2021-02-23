@@ -5,10 +5,12 @@ module.exports = {
     node: true,
   },
   extends: [
-    "eslint:recommended",
-    "google",
+    'eslint:recommended',
+    'google',
   ],
   rules: {
-    quotes: ["error", "double"],
+    'quotes': ['warn', 'single'],
+    'quote-props': ['error', 'consistent-as-needed'],
+    'object-curly-spacing': 0,
   },
 };
