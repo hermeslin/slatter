@@ -9,16 +9,16 @@
   "extends": "eslint:recommended",
   "rules": {
     // Removed rule "disallow the use of console" from recommended eslint rules
-    "no-console": "off",
+    "no-console": "error",
 
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules
     "no-regex-spaces": "off",
 
     // Removed rule "disallow the use of debugger" from recommended eslint rules
-    "no-debugger": "off",
+    "no-debugger": "error",
 
     // Removed rule "disallow unused variables" from recommended eslint rules
-    "no-unused-vars": "off",
+    "no-unused-vars": "error",
 
     // Removed rule "disallow mixed spaces and tabs for indentation" from recommended eslint rules
     "no-mixed-spaces-and-tabs": "off",
@@ -56,7 +56,7 @@
     // Warn against unnecessary calls to .bind()
     "no-extra-bind": 1,
 
-    // Warn against unnecessary labels    
+    // Warn against unnecessary labels
     "no-extra-label": 1,
 
     // Disallow leading or trailing decimal points in numeric literals
@@ -111,7 +111,7 @@
     "prefer-arrow-callback": 1,
 
     // Return inside each then() to create readable and reusable Promise chains.
-    // Forces developers to return console logs and http calls in promises. 
+    // Forces developers to return console logs and http calls in promises.
     "promise/always-return": 2,
 
     //Enforces the use of catch() on un-returned promises
