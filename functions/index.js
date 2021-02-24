@@ -1,8 +1,12 @@
-const functions = require('firebase-functions');
+const glob = require('glob');
+const endpoints = glob.sync('./endpoints/*.js', {cwd: __dirname});
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+[].concat(endpoints).forEach((file) => {
+  const functionName = file.split('/').pop().slice(0, -3); // Strip off '.js'
+  if (
+    !process.env.FUNCTION_NAME ||
+    process.env.FUNCTION_NAME === functionName
+  ) {
+    exports[functionName] = require(file);
+  }
+});
