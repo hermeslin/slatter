@@ -1,33 +1,31 @@
 const slackWebApi = require('@slack/web-api');
 const config = require('../../config');
+const admin = require('../../utils/firebase/admin');
 
 /**
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} event event data from firestore that controller received before
  */
-module.exports = async (req, res) => {
+module.exports = async (event) => {
   const { WebClient, LogLevel } = slackWebApi;
   const {
-    event: {
-      item: {
-        channel: channelId,
-        ts,
-      },
-      reaction,
-      item_user: itemUser,
+    user,
+    item: {
+      channel: channelId,
+      ts,
     },
-  } = req.body;
+    reaction,
+  } = event;
 
   if (reaction !== config.slack.emojiReaction) {
-    res.status(200).send({ message: 'wrong reaction' });
+    console.warning({ message: 'wrong reaction' });
     return;
   }
 
   // ignore bot user's reaction
-  if (itemUser === config.slack.botUserId) {
-    res.status(200).send({ message: 'wrong user' });
-    console.log(itemUser);
+  if (user === config.slack.botUserId) {
+    console.warning({ message: 'wrong user' });
+    console.log(user);
     return;
   }
 
@@ -48,8 +46,20 @@ module.exports = async (req, res) => {
     // get fisrt message form messages
     const [message] = result.messages;
 
-    // TODO: save message into firestore
-    console.log(message);
+    // save message into firestore
+    const db = admin.firestore();
+    const dbResult = await db.collection('slack_messages').add(message);
+
+    // reply emoji to original message
+    if (dbResult.id) {
+      await client.reactions.add({
+        channel: channelId,
+        name: config.slack.beforeTweetEmojiReaction,
+        timestamp: ts,
+      });
+
+      console.log({ message: 'ok' });
+    }
   } catch (error) {
     console.error(error);
   }
