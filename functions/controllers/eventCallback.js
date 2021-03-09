@@ -1,19 +1,29 @@
-const reactionAdded = require('../utils/slack/reactionAdded');
+const admin = require('../utils/firebase/admin');
+
+const acceptEventTypeList = [
+  'reaction_added',
+];
+
+const db = admin.firestore();
 
 /**
  *
  * @param {*} req
  * @param {*} res
  */
-module.exports = (req, res) => {
-  console.log(req.body);
-
+module.exports = async (req, res) => {
   const { event } = req.body;
-  switch (event.type) {
-    case 'reaction_added':
-      reactionAdded(req, res);
-      break;
-    default:
-      res.status(400).send({ message: 'Event Not Exists' });
+
+  if (acceptEventTypeList.includes(event.type)) {
+    try {
+      await db.collection('slack_events').add(event);
+      res.status(200).send({ message: 'ok' });
+      return;
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Server Error' });
+    }
   }
+
+  res.status(200).send({ message: 'Event Not Exists' });
 };

@@ -20,7 +20,8 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
-    "glob": "^7.1.6"
+    "glob": "^7.1.6",
+    "microtime": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
