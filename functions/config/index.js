@@ -7,5 +7,6 @@ module.exports = {
     accessToken: process.env.SLACK_BOT_ACCESS_TOKEN,
     emojiReaction: process.env.SLACK_EMOJI_REACTION,
     botUserId: process.env.SLACK_BOT_USER_ID,
+    beforeTweetEmojiReaction: process.env.SLACK_BEFORE_TWEET_EMOJI_REACTION,
   },
 };
