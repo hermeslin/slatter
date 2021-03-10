@@ -50,7 +50,10 @@ const reactionAdded = async (event) => {
     const [message] = result.messages;
 
     // save message into firestore
-    const dbResult = await db.collection('slack_messages').add(message);
+    const dbResult = await db.collection('slack_messages').add({
+      ...message,
+      channel: channelId,
+    });
 
     // reply emoji to original message
     if (dbResult.id) {
