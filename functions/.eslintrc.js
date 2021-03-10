@@ -9,7 +9,7 @@ module.exports = {
     'google',
   ],
   parserOptions: {
-    ecmaVersion: 8,
+    ecmaVersion: 9,
   },
   rules: {
     'quotes': ['warn', 'single'],
