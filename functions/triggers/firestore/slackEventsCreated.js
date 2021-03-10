@@ -1,10 +1,16 @@
 const functions = require('firebase-functions');
+const admin = require('../../utils/firebase/admin');
 const reactionAdded = require('../../utils/slack/reactionAdded');
+
+/**
+ * firebase instance
+ */
+const db = admin.firestore();
 
 /**
  * Document path
  */
-const document = '/slack_events/{uuid}';
+const collection = 'slack_events';
 
 /**
  * On document created
@@ -12,7 +18,7 @@ const document = '/slack_events/{uuid}';
  * @param {*} context
  */
 const onCreate = async (snapshot, context) => {
-  // const uuid = context.params.uuid;
+  const uuid = context.params.uuid;
   const event = snapshot.data();
 
   switch (event.type) {
@@ -20,6 +26,12 @@ const onCreate = async (snapshot, context) => {
       reactionAdded(event);
       break;
   }
+
+  // delete reaction added event data, reduce firestore disk space usage.
+  db.collection(collection).doc(uuid).delete();
 };
 
-module.exports = functions.firestore.document(document).onCreate(onCreate);
+/**
+ * export firestore onCreate trigger
+ */
+module.exports = functions.firestore.document(`/${collection}/{uuid}`).onCreate(onCreate);

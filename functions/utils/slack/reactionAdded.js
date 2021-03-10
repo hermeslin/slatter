@@ -3,10 +3,14 @@ const config = require('../../config');
 const admin = require('../../utils/firebase/admin');
 
 /**
- *
+ * firebase instance
+ */
+const db = admin.firestore();
+
+/**
  * @param {*} event event data from firestore that controller received before
  */
-module.exports = async (event) => {
+const reactionAdded = async (event) => {
   const { WebClient, LogLevel } = slackWebApi;
   const {
     user,
@@ -18,14 +22,13 @@ module.exports = async (event) => {
   } = event;
 
   if (reaction !== config.slack.emojiReaction) {
-    console.warning({ message: 'wrong reaction' });
+    console.log({ message: `reaction ${reaction} received.` });
     return;
   }
 
   // ignore bot user's reaction
   if (user === config.slack.botUserId) {
-    console.warning({ message: 'wrong user' });
-    console.log(user);
+    console.log({ message: `user ${user} reaction` });
     return;
   }
 
@@ -47,7 +50,6 @@ module.exports = async (event) => {
     const [message] = result.messages;
 
     // save message into firestore
-    const db = admin.firestore();
     const dbResult = await db.collection('slack_messages').add(message);
 
     // reply emoji to original message
@@ -58,9 +60,14 @@ module.exports = async (event) => {
         timestamp: ts,
       });
 
-      console.log({ message: 'ok' });
+      console.log({ message: `attach reaction ${config.slack.beforeTweetEmojiReaction} back.` });
     }
   } catch (error) {
     console.error(error);
   }
 };
+
+/**
+ * export reactionAdded function
+ */
+module.exports = reactionAdded;
