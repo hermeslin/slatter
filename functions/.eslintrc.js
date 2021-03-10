@@ -15,5 +15,6 @@ module.exports = {
     'quotes': ['warn', 'single'],
     'quote-props': ['error', 'consistent-as-needed'],
     'object-curly-spacing': 0,
+    'max-len': ['error', { ignoreTemplateLiterals: true }],
   },
 };
