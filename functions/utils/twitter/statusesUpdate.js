@@ -18,8 +18,9 @@ const statusesUpdate = async (slackMessage) => {
   });
 
   try {
+    const tweetMessage = text.replace(/<(https?:\/\/.+)>/, (match, url) => url);
     const tweet = await client.post('statuses/update', {
-      status: text,
+      status: tweetMessage,
     });
 
     if (tweet.id_str) {
